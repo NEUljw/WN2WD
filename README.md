@@ -24,13 +24,25 @@ For the model selection, we use two combinations.
 
 There are six models in this model combination, including three Non-Contextual models: LDA, Word2Vec, FastText, and three Contextual models: MaLSTM, BERT, XLNet.
 
-The operation steps are as follows:
+First, run these steps:
 
-1. 下载相关数据，放在相应位置。
-2. 设置`create_data.py`中的路径参数并运行，对原始数据进行预处理。
-3. 设置`create_run_data.py`中的路径参数并运行，生成运行的数据。
-4. 设置`models/LDA/LDA_model.py`中的路径参数，运行相应部分，生成第一轮的训练集。
-5. 设置`models/word2vec/word2vec_model.py`中的路径参数并运行，训练Word2Vec模型。
+1. **Download the relevant data and put it in the corresponding path.**
+2. Set the path parameters in `create_data.py` and run it to preprocess the original data.
+3. Set the path parameters in `create_run_data.py` and run to generate the running data.
+
+Next, run multiple iterations, the steps for one iteration are as follows:
+
+1. Set the path parameters in `models/LDA/LDA_model.py`, run the corresponding part, generate the train data of None-Contextual models and train LDA model.
+2. Set the path parameters in `models/word2vec/word2vec_model.py` and run it to train Word2Vec model.
+3. Set the path parameters in `models/FastText/FastText_train.py` and run it to train FastText model.
+4. Set the parameters in `models/BERT/bert_train.py` and run to fine-tune the BERT model (except the first round).
+5. Set parameters in `models/Xlnet/xlnet_train.py` and run to fine-tune the XLNet model (except the first round).
+6. Set parameters in `models/MaLSTM/MaLSTM (the second round) or MaLSTM2 (after the second round)` and run to train MaLSTM model.
+7. Set the parameters in `run_models.py` and run the corresponding part to generate intermediate results.
+8. Set the parameters in `cal_score.py` and run it to calculate the model score (except the first round).
+9. Set the parameters in `count_votes.py` and run the corresponding part, generate mapping results and negative train data of the Contextual models according to the intermediate results.
+10. Set the parameters in `create_train_data.py` and run it to generate the positive train data of Contextual models and merge it with negative train data.
+11. Set the parameters in `merge_train_data.py` and run the corresponding part, merge all the previous corresponding train data as the train data of Contextual models.
 
 ### Model Combination2
 
@@ -45,7 +57,7 @@ We combine the description similarity and the label similarity as the comprehens
 The operation steps are as follows:
 
 1. Download data from WikiData official website, a total of 10000 parts (needs a lot of disk space).
-2. **Download the rest of the relevant data and put it in the corresponding location.**
+2. **Download the rest of the relevant data and put it in the corresponding path.**
 3. Set the path parameters in `data/parse_wikidata.py` and run it to parse the original WikiData data.
 4. Set the path parameters in `data/create_qnode2wiki.py` and run it to process the data format.
 6. Set the path parameters in `create_wiki_dict.py` and run it to generate a dictionary.
