@@ -53,14 +53,3 @@ with open('tttttt.csv', 'w', encoding='utf-8-sig', newline='') as f:
     f_csv = csv.writer(f)
     f_csv.writerow(['text1', 'text2', 'is_same'])
     f_csv.writerows(all_data)
-
-pos = neg = 0
-with open('tttttt.csv', 'r', encoding='utf-8-sig') as f:
-    f_csv = csv.reader(f)
-    head_row = next(f_csv)  # 跳过表头
-    for row in f_csv:
-        if row[2] == '1':
-            pos += 1
-        else:
-            neg += 1
-print(pos, neg)

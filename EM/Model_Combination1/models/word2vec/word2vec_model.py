@@ -7,9 +7,9 @@ import numpy as np
 
 # 训练模型
 def train_model():
-    sentences = word2vec.LineSentence('sentences.txt')
+    sentences = word2vec.LineSentence('sentences.txt')     # Path
     model = word2vec.Word2Vec(sentences=sentences, size=100, min_count=3)
-    model.wv.save_word2vec_format('word2vec.bin', binary=True)
+    model.wv.save_word2vec_format('word2vec.bin', binary=True)    # Path
 
 
 # 计算两句话的相似度
@@ -35,7 +35,7 @@ def vector_similarity(s1, s2, model):
 
 # 计算wordnet描述和所有候选wikidata描述的相似度
 def cal_sim_word2vec(all_wordnet_des, all_wikidata_des_list, default_sim):
-    model = gensim.models.KeyedVectors.load_word2vec_format('models/word2vec/word2vec.bin', binary=True)
+    model = gensim.models.KeyedVectors.load_word2vec_format('models/word2vec/word2vec.bin', binary=True)     # Path
     all_sim_list = []
     for wordnet_des, wikidata_des_list in zip(all_wordnet_des, all_wikidata_des_list):
         sim_list = []

@@ -1,4 +1,4 @@
-# 注意之后对开头为P的wikidata、描述为None的特殊处理
+"""generate embeddings of descriptions"""
 from sentence_transformers import SentenceTransformer
 from datetime import datetime
 import numpy as np
@@ -9,11 +9,11 @@ from tqdm import tqdm
 
 class Config:
     wordnet_path = 'merged_candidate.pkl'
-    wiki_pkl_path = 'wiki_new.pkl'         # 上一步运行结果的路径
+    wiki_pkl_path = 'wiki_new.pkl'
     all_candidate_qnode_path = 'all_candidate_qnode.pkl'
 
-    model_name = 'distilbert-base-nli-stsb-mean-tokens'    # 使用的模型名称
-    embed_save_path = 'distilbert_id2embed.pkl'    # 生成的pkl文件路径
+    model_name = 'distilbert-base-nli-stsb-mean-tokens'    # Model name
+    embed_save_path = 'distilbert_id2embed.pkl'    # Path to the result file (embeddings)
     batch_size = 128
 
 
@@ -29,7 +29,6 @@ def read_wordnet():
 
 
 def read_wikidata():
-    # 读取wikidata数据
     print('loading wikidata pkl file(dict)...')
     with open(Config.wiki_pkl_path, 'rb') as f:
         qnode2wiki = pickle.load(f)
@@ -48,8 +47,8 @@ def read_wikidata():
 
 def des_encode():
     start = datetime.now()
-    print('模型运行开始时间:', start.strftime("%Y-%m-%d %H:%M:%S"), '\n==================')
-    print('模型名称:', Config.model_name)
+    print('start time:', start.strftime("%Y-%m-%d %H:%M:%S"), '\n==================')
+    print('model name:', Config.model_name)
 
 
     wn_des, wn_id = read_wordnet()
@@ -57,9 +56,9 @@ def des_encode():
     des_lst = wn_des + wiki_des
     id_lst = wn_id + wiki_id
 
-    print('des数量:', len(des_lst))
+    print('des number:', len(des_lst))
     embedder = SentenceTransformer(Config.model_name)
-    # 防止运行报错对None的处理
+    # handling 'None' in case of error
     des_lst = [i if i != 'None' else 'None Description' for i in des_lst]
     des_embeddings = embedder.encode(des_lst, batch_size=Config.batch_size, show_progress_bar=True)    # 768
     print(len(des_embeddings))
@@ -68,15 +67,14 @@ def des_encode():
     for id, embed in tqdm(zip(id_lst, des_embeddings), desc='creating embed dict'):
         id2embed[id] = embed
 
-    print('保存句向量至文件中...')
+    print('saving sentence embeddings to file...')
     with open(Config.embed_save_path, 'wb') as f:
         pickle.dump(id2embed, f)
-    print('保存成功！')
-
+    print('save done！')
 
     end = datetime.now()
-    print('==================\n模型运行结束时间:', end.strftime("%Y-%m-%d %H:%M:%S"))
-    print('运行时间为', round((end-start).seconds/60, 4), 'minutes')
+    print('==================\nend time:', end.strftime("%Y-%m-%d %H:%M:%S"))
+    print('running time is', round((end-start).seconds/60, 4), 'minutes')
 
 
 if __name__ == '__main__':

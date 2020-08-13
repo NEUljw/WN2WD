@@ -25,7 +25,6 @@ def read_corpus():
 
 
 def train(sentences):
-    # sentences = [['I', 'know', 'you'], ['He', 'can', 'swim']]
     model = FastText(sentences, size=100, window=4, min_count=1, iter=5, min_n=4,
                      max_n=7, word_ngrams=1)
     model.save(MODEL_PATH)

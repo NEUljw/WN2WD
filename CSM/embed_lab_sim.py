@@ -1,4 +1,4 @@
-"""注意对描述为None的处理，以及labels数量很少的候选项的考虑(候选集都是Q开头的)"""
+"""generate mapping results"""
 import pickle
 from tqdm import tqdm
 import numpy as np
@@ -6,18 +6,18 @@ import numpy as np
 
 class Config:
     wordnet_path = 'merged_candidate.pkl'
-    wiki_path = 'wiki_new.pkl'      # wiki_new.pkl的路径
+    wiki_path = 'wiki_new.pkl'
     embed_path = 'distilbert_id2embed.pkl'
 
-    result_path = 'distilbert_result.pkl'      # 更改模型时也要修改这个，防止覆盖
+    result_path = 'distilbert_result.pkl'      # Path to the result file (mapping results)
 
-    lab_add = 100       # 0.15
-    lab_add_more = 100     # 0.25
+    lab_add = 100
+    lab_add_more = 100
     none_sim = 0
     lab_num_limit = 3
 
 
-def cosine_sim(a, b):    # 余弦相似度，结果在-1到1之间，保留4位小数
+def cosine_sim(a, b):
     try:
         sim = np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
     except ValueError:
@@ -28,7 +28,7 @@ def cosine_sim(a, b):    # 余弦相似度，结果在-1到1之间，保留4位�
 def read_wordnet():
     with open(Config.wordnet_path, 'rb') as f:
         wn_data = pickle.load(f)
-    print('synset总数:', len(wn_data))
+    print('synset number:', len(wn_data))
     return wn_data
 
 
@@ -36,15 +36,15 @@ def cal():
     wn2result = {}
     wn = read_wordnet()
 
-    print('读取qnode2wiki字典中...')
+    print('loading qnode2wiki...')
     with open(Config.wiki_path, 'rb') as f:
         qnode2wiki = pickle.load(f)
-    print('字典大小:', len(qnode2wiki))
+    print('qnode2wiki length:', len(qnode2wiki))
 
-    print('读取id2embed字典中...')
+    print('loading id2embed...')
     with open(Config.embed_path, 'rb') as f:
         id2embed = pickle.load(f)
-    print('字典大小:', len(id2embed))
+    print('id2embed length:', len(id2embed))
 
     for one_wn, candi in tqdm(wn.items(), desc='calculating'):
         one_wn_embed = id2embed[one_wn[0]]
@@ -85,10 +85,10 @@ def cal():
                                                               one_wn_lab_sim_sorted.index(one_wn_lab_sim[max_sim_idx])+1,
                                                               one_wn_des_sim_sorted.index(one_wn_des_sim[max_sim_idx])+1]
 
-    print('结果保存中...')
+    print('saving mapping results...')
     with open(Config.result_path, 'wb') as f:
         pickle.dump(wn2result, f)
-    print('运行完毕!')
+    print('done!')
 
 
 if __name__ == '__main__':

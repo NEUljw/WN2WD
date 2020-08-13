@@ -1,10 +1,10 @@
-"""labels和descriptions可能为None，props可能为空"""
+"""parse the original Wikidata data"""
 import jsonlines
 import pickle
 from tqdm import tqdm
 
-read_path = 'part-'    # wikidata文件的路径
-save_path = 'wiki.pkl'   # 生成的pkl文件的路径
+read_path = 'part-'    # Path to original Wikidata files
+save_path = 'wiki.pkl'   # Path to the result file
 
 dict_keys=['labels', 'qnode', 'title', 'statement_count',
            'text', 'sitelink_count', 'namespace', 'namespace_text', 

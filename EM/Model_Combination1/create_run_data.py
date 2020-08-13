@@ -1,13 +1,11 @@
+"""generate the running data"""
 import csv
 import pickle
 
 
 def read_wordnet_data(syn_start, syn_end):
-    """
-    1-10, 10-20
-    """
     data = []
-    with open('data/wordnet_data.csv', 'r', encoding='utf-8') as f:
+    with open('data/wordnet_data.csv', 'r', encoding='utf-8') as f:      # Path
         f_csv = csv.reader(f)
         head_row = next(f_csv)
         n = 0
@@ -34,7 +32,7 @@ def read_wiki_candidate():
     data = []
     for file_num in range(1, 14):
         one_data = read_one_wiki_candidate(
-            file_path='data/wikidata_candidate/candidate_part_' + str(file_num) + '.csv')
+            file_path='data/wikidata_candidate/candidate_part_' + str(file_num) + '.csv')     # Path
         data += one_data
     return data
 
@@ -43,7 +41,7 @@ def create_run_data():
     wordnet_data = read_wordnet_data(syn_start=1, syn_end=117660)
     candidate = read_wiki_candidate()
 
-    # 对数据进行处理
+    # data processing
     query_result, unsolvable_result = [], []
     uu = 0
     for one_synset in wordnet_data:
@@ -61,12 +59,12 @@ def create_run_data():
                             row_triple.append(row[3 * one_triple:3 * (one_triple + 1)])
                         one_synset_result += row_triple
                     break
-        # 候选项去重
+        # candidate de duplication
         one_synset_result_set = []
         for i in one_synset_result:
             if i not in one_synset_result_set:
                 one_synset_result_set.append(i)
-        # 将无法判断的候选集储存
+        # save synsets that can't be determined
         wiki_des = [i[1] for i in one_synset_result_set]
         if set(wiki_des) != {'None'}:
             query_result.append([one_synset, one_synset_result_set])
@@ -77,9 +75,9 @@ def create_run_data():
     query_result = [i for i in query_result if len(i[1]) != 0]
     print(len(query_result))
 
-    with open('data/run_data.pkl', 'wb') as f:
+    with open('data/run_data.pkl', 'wb') as f:      # Path
         pickle.dump({'data': query_result}, f)       # 109430
-    with open('data/unsolvable_data.pkl', 'wb') as f:
+    with open('data/unsolvable_data.pkl', 'wb') as f:    # Path
         pickle.dump({'data': unsolvable_result}, f)   # 2857
 
 

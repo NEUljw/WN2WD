@@ -22,7 +22,7 @@ def read_one_wiki_candidate(file_path):
 # 一行中的内容是相同主题（语义），第一轮时使用这个
 def create_corpus1():
     data = []
-    with open('../../data/wordnet_data.csv', 'r', encoding='utf-8') as f:
+    with open('../../data/wordnet_data.csv', 'r', encoding='utf-8') as f:      # Path
         f_csv = csv.reader(f)
         n = 0
         for row in f_csv:
@@ -31,18 +31,18 @@ def create_corpus1():
                 data.append(row[1])
 
     for file_num in range(1, 14):
-        one_data = read_one_wiki_candidate(file_path='../../data/wikidata_candidate/candidate_part_'+str(file_num)+'.csv')
+        one_data = read_one_wiki_candidate(file_path='../../data/wikidata_candidate/candidate_part_'+str(file_num)+'.csv')      # Path
         data += one_data
         print('read number', file_num, 'file done.')
 
-    with open('sentences.txt', 'w', encoding='utf-8-sig') as f:
+    with open('sentences.txt', 'w', encoding='utf-8-sig') as f:      # Path
         for i in data:
             f.write(i+'\n')
 
 
 # 其他轮使用这个
 def create_corpus2():
-    RESULT_FILE_PATH = 'map of 6models.csv'
+    RESULT_FILE_PATH = 'map of 6models.csv'      # Path
     data = []
     with open(RESULT_FILE_PATH, 'r', encoding='utf-8-sig') as f:
         f_csv = csv.reader(f)
@@ -54,7 +54,7 @@ def create_corpus2():
     result = [i[0]+'. '+i[1] for i in data]
 
     data_b = []
-    fp = codecs.open('sentences_before.txt', 'r', encoding='utf-8-sig')
+    fp = codecs.open('sentences_before.txt', 'r', encoding='utf-8-sig')     # Path
     for line in fp:
         data_b.append(line.strip())
 
@@ -66,29 +66,29 @@ def create_corpus2():
     result = list(set(result))
     len_b = len(result)
     print('最终训练集去重后:', len_b)
-    with open('sentences.txt', 'w', encoding='utf-8-sig') as f:
+    with open('sentences.txt', 'w', encoding='utf-8-sig') as f:     # Path
         for i in result:
             f.write(i+'\n')
 
 
 def get_dict():
     train = []
-    fp = codecs.open('sentences.txt', 'r', encoding='utf-8-sig')  # 文本文件，输入需要提取主题的文档
+    fp = codecs.open('sentences.txt', 'r', encoding='utf-8-sig')  # Path
     for line in fp:
         line = word_tokenize(line)
         train.append([w for w in line if w not in stopwords.words('english')])
     dictionary = Dictionary(train)
-    dictionary.save('train_data.dict')
+    dictionary.save('train_data.dict')     # Path
     return train
 
 
 def train_model(num_topic):
     train = get_dict()
-    dictionary = Dictionary.load('train_data.dict')
+    dictionary = Dictionary.load('train_data.dict')     # Path
     corpus = [dictionary.doc2bow(text) for text in train]
     lda = LdaModel(corpus=corpus, id2word=dictionary, num_topics=num_topic)
     # 模型的保存
-    lda.save('LDA_trained_model/lda.model')
+    lda.save('LDA_trained_model/lda.model')     # Path
 
 
 # 计算两个文档的相似度
@@ -115,8 +115,8 @@ def lda_sim(s1, s2, dictionary, model):
 
 # 分别计算两个list元素的相似度
 def cal_sim_LDA(all_wordnet_desc, all_wikidata_desc_list, default_sim):
-    dic = Dictionary.load('models/LDA/train_data.dict')
-    model = models.ldamodel.LdaModel.load('models/LDA/LDA_trained_model/lda.model')
+    dic = Dictionary.load('models/LDA/train_data.dict')     # Path
+    model = models.ldamodel.LdaModel.load('models/LDA/LDA_trained_model/lda.model')     # Path
     all_sim_list = []
     for wordnet_desc, wikidata_desc_list in zip(all_wordnet_desc, all_wikidata_desc_list):
         sim_list = []
@@ -131,9 +131,9 @@ def cal_sim_LDA(all_wordnet_desc, all_wikidata_desc_list, default_sim):
 
 
 if __name__ == '__main__':
-    # 生成第一轮的训练集用这部分
+    # run this to generate the first round of train data
     create_corpus1()
-    # 生成其他轮的训练集用这部分
+    # run this to generate train data for other rounds
     create_corpus2()
-    # 训练模型用这部分
+    # run this to train LDA model
     train_model(num_topic=10)

@@ -1,3 +1,4 @@
+"""generate candidate set"""
 import csv
 import pickle
 from nltk.stem.porter import PorterStemmer
@@ -5,13 +6,13 @@ from tqdm import tqdm
 
 
 class Config:
-    wordnet_path = 'data/original_data/wordnet_data.csv'
-    word2qnodes_path = 'word2qnodes.pkl'     # 字典路径
+    wordnet_path = 'data/original_data/wordnet_data.csv'   # Path to wordnet_data.csv
+    word2qnodes_path = 'word2qnodes.pkl'     # Path to word2qnodes.pkl
 
-    candidate_path = 'candidate_lab.pkl'      # 生成的结果路径
+    candidate_path = 'candidate_lab.pkl'      # Path to the result file (candidate set)
 
 
-def read_wordnet():    # 读取wordnet数据，只要名词
+def read_wordnet():    # Load wordnet data (only noun)
     print('loading wordnet data...')
     wn_data, noun_idx = [], []
     with open(Config.wordnet_path, 'r', encoding='utf-8') as f:

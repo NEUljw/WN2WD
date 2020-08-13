@@ -1,4 +1,3 @@
-# 相同的desc相似度为1
 import time
 import threading
 import pickle
@@ -11,7 +10,6 @@ from models.FastText.FastText_use import cal_sim_FastText
 from models.MaLSTM.model_predict import data_to_csv, cal_sim_lstm
 
 
-# desc is None?
 def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
                     for_count_votes=False, gpu_name=None, gpu_num=None, batch_size=None):
     with open('data/run_data.pkl', 'rb') as f:

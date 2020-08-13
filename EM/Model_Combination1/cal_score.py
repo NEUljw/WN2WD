@@ -114,22 +114,4 @@ def count_votes():
 
 
 if __name__ == "__main__":
-    # count_votes()
-    query_result = query_candidate(start_num=1, end_num=117660, for_count_votes=True)
-    print(len(query_result))
-    query_result = [i for i in query_result if len(i[1]) != 0]
-    print(len(query_result))
-    small = 0
-    for one_query in query_result:
-        one_query_set = []
-        for i in one_query[1]:
-            if i not in one_query_set:
-                one_query_set.append(i)
-
-        wiki_des = [j[1] for j in one_query_set]
-        if len(set(wiki_des)) < len(wiki_des) and len(wiki_des) == 4 and 'None' not in wiki_des and 'Wikimedia category' not in wiki_des:
-            print(one_query[0])
-            for k in one_query_set:
-                print(k)
-            print('--'*30)
-    print(small)
+    count_votes()

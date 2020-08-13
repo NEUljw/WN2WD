@@ -1,10 +1,9 @@
-"""注意生成的字典和另一个字典形式一致，word为短语或单词的词干，注意最后去重"""
+"""generate a dict"""
 import csv
 import pickle
 from nltk.stem.porter import PorterStemmer
 from tqdm import tqdm
 
-# 设置字段最大值
 csv.field_size_limit(500 * 1024 * 1024)
 porter_stemmer = PorterStemmer()
 candi_dict = {}
@@ -34,13 +33,13 @@ def read_one_file(file_path):
 
 
 for file_n in range(1, 14):
-    read_one_file(file_path='data/original_data/top50/all_synsets_'+str(file_n)+'.csv')
+    read_one_file(file_path='data/original_data/top50/all_synsets_'+str(file_n)+'.csv')   # Path
 print(len(candi_dict))
 
 cand_final = {}
 for key, value in candi_dict.items():
     cand_final[key] = list(set(value))
 
-with open('web_result_word2qnodes.pkl', 'wb') as f:
+with open('web_result_word2qnodes.pkl', 'wb') as f:    # Path
     pickle.dump(cand_final, f)
 print('done!')

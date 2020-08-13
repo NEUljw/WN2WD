@@ -1,17 +1,16 @@
-"""生成的字典格式：key为word(短语的话就不变，单词的话就提取词干)，value为对应的qnodes"""
+"""generate a dict"""
 import pickle
 from nltk.stem.porter import PorterStemmer
 from tqdm import tqdm
 
 
 class Config:
-    wiki_pkl_path = '/nas/home/chengj/anaconda3/envs/huggingface/codes/datasets/wiki.pkl'
-
-    dict_path = 'word2qnodes.pkl'    # 生成的字典路径
+    wiki_pkl_path = 'datasets/wiki.pkl'   # Path to wiki.pkl
+    dict_path = 'word2qnodes.pkl'    # Path to the result file (dict)
 
 
 def read_wikidata():
-    # 读取wikidata数据
+    # Load wiki.pkl
     print('loading wikidata pkl file...')
     with open(Config.wiki_pkl_path, 'rb') as f:
         wiki_data = pickle.load(f)
