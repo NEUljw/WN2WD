@@ -1,4 +1,3 @@
-# 相同的desc相似度为1, 相似度范围是-1到1
 import time
 import threading
 import pickle
@@ -8,7 +7,6 @@ from models.word2vec.word2vec_model import cal_sim_word2vec
 from models.FastText.FastText_use import cal_sim_FastText
 
 
-# desc is None?
 def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
                     for_count_votes=False, gpu_name=None, gpu_num=None, batch_size=None):
     with open('data/run_data.pkl', 'rb') as f:

@@ -16,6 +16,22 @@ The code does **not** work with Python 2.7.
 
 
 
+## Data preprocess
+
+First of all, we need to preprocess the data.
+
+1. **Download the relevant data and put it in the corresponding path.**
+2. Set the path parameters in `create_data.py` and run it to preprocess the original data.
+3. Set the path parameters in `create_run_data.py` and run to generate the running data.
+
+Then, we can run any of the three methods:
+
++ EM (model combination1)
++ EM (model combination2)
++ CSM 
+
+
+
 ## Ensemble Method (EM)
 
 For the model selection, we use two combinations.
@@ -24,13 +40,7 @@ For the model selection, we use two combinations.
 
 There are six models in this model combination, including three Non-Contextual models: LDA, Word2Vec, FastText, and three Contextual models: MaLSTM, BERT, XLNet.
 
-First, run these steps:
-
-1. **Download the relevant data and put it in the corresponding path.**
-2. Set the path parameters in `create_data.py` and run it to preprocess the original data.
-3. Set the path parameters in `create_run_data.py` and run to generate the running data.
-
-Next, run multiple iterations, the steps for one iteration are as follows:
+Run multiple iterations, the steps for one iteration are as follows:
 
 1. Set the path parameters in `models/LDA/LDA_model.py`, run the corresponding part, generate the train data of None-Contextual models and train LDA model.
 2. Set the path parameters in `models/word2vec/word2vec_model.py` and run it to train Word2Vec model.
@@ -48,13 +58,7 @@ Next, run multiple iterations, the steps for one iteration are as follows:
 
 There are eight models in this model combination, including three Non-Contextual models: LDA, Word2Vec, FastText, and five Contextual models: Siamese LSTM, Siamese XLNet, Siamese BERT, Siamese RoBERTa, Siamese DistilBERT.
 
-First, run these steps:
-
-1. **Download the relevant data and put it in the corresponding path.**
-2. Set the path parameters in `create_data.py` and run it to preprocess the original data.
-3. Set the path parameters in `create_run_data.py` and run to generate the running data.
-
-Second, generate the intermediate results of None-Contextual models.
+First, generate the intermediate results of None-Contextual models.
 
 1. Set the parameters in `create_train_data_ML.py` and run it to generate the train data of None-Contextual models.
 2. Set the parameters in `models/LDA/LDA_model.py` and run to train LDA model.
@@ -62,7 +66,7 @@ Second, generate the intermediate results of None-Contextual models.
 4. Set the parameters in `models/FastText/FastText_train.py` and run to train FastText model.
 5. Set the parameters in `run_models.py` and run to generate intermediate results.
 
-Third, generate the intermediate results of Contextual models.
+Second, generate the intermediate results of Contextual models.
 
 1. Set parameters and run `training/xlnet_train_on_nli.py` and `xlnet_continue_train_on_sts.py` successively to fine-tune XLNet.
 2. Set parameters and run `lstm_train_on_sts.py` to train LSTM.
