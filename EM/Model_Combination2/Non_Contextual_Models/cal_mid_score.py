@@ -4,7 +4,6 @@ from collections import Counter
 from run_models import query_candidate
 
 
-# 读取中间结果，即pkl文件
 def read_mid_pkl(model_name, pkl_num):
     all_mid = []
     for i in range(pkl_num):
@@ -16,7 +15,6 @@ def read_mid_pkl(model_name, pkl_num):
     return all_mid
 
 
-# 和run_models的数字一致
 def count_votes():
     LDA_sim = read_mid_pkl('LDA', pkl_num=1)
     word2vec_sim = read_mid_pkl('word2vec', pkl_num=1)
@@ -97,13 +95,13 @@ def count_votes():
     print(eee)
     print(model_score)
     print('synset number:', len(LDA_sim))
-    print('其中wikidata候选集为空的数量:{}'.format(empty_count))
-    print('最终储存的synset数量:', len(all_most_counter))
+    print('candidate empty number:{}'.format(empty_count))
+    print('saved synset number:', len(all_most_counter))
 
     query_result = [i for i in query_result if len(i[1]) != 0]
     print(len(query_result))
 
-    # 某一轮的总结果
+    # mapping results
     new_file_path = 'result_files/map_.csv'
     with open(new_file_path, 'w', encoding='utf-8-sig', newline='') as f:
         f_csv = csv.writer(f)

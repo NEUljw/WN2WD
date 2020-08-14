@@ -20,7 +20,7 @@ DICTIONARY_PATH = 'word2id.pkl'
 ################
 # Parameters
 ################
-validation_ratio = 0.1       # 训练集中验证集占的比例
+validation_ratio = 0.1
 gradient_clip_norm = 1.25
 batch_size = 64  # 64
 n_epoch = 10

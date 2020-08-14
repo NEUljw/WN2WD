@@ -14,23 +14,23 @@ import csv
 ################
 # Parameters
 ################
-sign_num = 3       # 迭代的轮数，为2时在预训练模型基础上微调，为其它时在上一个迭代的模型基础上微调
-gpu_name = "1,2,3"     # GPU编号
-gpu_num = 3        # GPU数量
+sign_num = 3       # round number
+gpu_name = "1,2,3"     # GPU id
+gpu_num = 3        # GPU number
 epoch_num = 5
 batch_size = 3
 valid_data_ratio = 0.1
 seq_max_len = 50
 
 # File path
-MODEL_SAVE_PATH = 'fine_tune_model/bert_fine_tune.hdf5'   # 微调后的MODEL保存路径
+MODEL_SAVE_PATH = 'fine_tune_model/bert_fine_tune.hdf5'   # fine-tuned model path
 data_path = 'train.csv'
 model_path = 'pretrained_model/uncased_L-24_H-1024_A-16'
 config_path = os.path.join(model_path, 'bert_config.json')
 checkpoint_path = os.path.join(model_path, 'bert_model.ckpt')
 vocab_path = os.path.join(model_path, 'vocab.txt')
 
-# GPU设置
+# GPU config
 K.clear_session()
 os.environ['CUDA_VISIBLE_DEVICES'] = gpu_name
 config = tf.ConfigProto(device_count={'GPU': gpu_num})
@@ -44,13 +44,13 @@ def read_data(file_path):
     data = []
     with open(file_path, 'r', encoding='utf-8-sig') as f:
         f_csv = csv.reader(f)
-        head_row = next(f_csv)     # 跳过表头
+        head_row = next(f_csv)
         for row in f_csv:
             data.append([row[0], row[1], int(row[2])])
     return data
 
 
-# 读数据并划分为训练集和验证集
+# load data, generate train data and valid data
 all_data = read_data(data_path)
 valid_num = int(len(all_data) * valid_data_ratio)
 train_num = len(all_data)-valid_num
@@ -60,12 +60,11 @@ print('data number:', len(all_data))
 print('train data number:', len(train_data))
 print('valid data number:', len(valid_data))
 
-# 加载Tokenizer
+# load Tokenizer
 token_dict = load_vocabulary(vocab_path)
 tokenizer = Tokenizer(token_dict)
 
 
-# 数据的生成器
 class data_generator:
     def __init__(self, data, batch_size):
         self.data = data
@@ -95,12 +94,11 @@ class data_generator:
 
 
 if sign_num == 2:
-    # 加载预训练模型并设置为可训练
     bert_model = load_trained_model_from_checkpoint(config_path, checkpoint_path, seq_len=None)
     for l in bert_model.layers:
         l.trainable = True
 
-    # MODEL结构
+    # MODEL
     x1_in = Input(shape=(None,))
     x2_in = Input(shape=(None,))
     x = bert_model([x1_in, x2_in])
@@ -109,7 +107,7 @@ if sign_num == 2:
 
     model = Model([x1_in, x2_in], p)
 else:
-    with tf.device('/cpu:0'):      # CPU里构建模型
+    with tf.device('/cpu:0'):      # CPU
         model = load_model(MODEL_SAVE_PATH, custom_objects=get_custom_objects(), compile=False)
 par_model = multi_gpu_model(model, gpus=gpu_num)
 par_model.compile(
@@ -139,7 +137,7 @@ valid_D = data_generator(valid_data, batch_size)
 checkpoint = ParallelModelCheckpoint(model, filepath=MODEL_SAVE_PATH, monitor='val_loss',
                                      verbose=1, save_best_only=True, mode='min',
                                      save_weights_only=False)'''
-# MODEL训练和储存
+# Model train and save
 for i in range(epoch_num):
     par_model.fit_generator(
         train_D.__iter__(),
@@ -150,4 +148,4 @@ for i in range(epoch_num):
         verbose=2
     )
     model.save(MODEL_SAVE_PATH)
-    print('--' * 20 + '1个epoch训练结束' + '--' * 20)
+    print('--' * 20 + 'one epoch done' + '--' * 20)

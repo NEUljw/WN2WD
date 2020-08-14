@@ -12,7 +12,7 @@ from models.Xlnet.layers_keras import NonMaskingLayer
 from models.Xlnet import args
 
 
-# gpu配置与设置，在加载模型时运行
+# GPU config
 def set_gpu_option(gpu_name, gpu_num):
     os.environ['CUDA_VISIBLE_DEVICES'] = gpu_name
     # config = tf.ConfigProto()

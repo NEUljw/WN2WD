@@ -6,7 +6,7 @@ import tensorflow as tf
 import keras.backend.tensorflow_backend as ktf_keras
 
 
-# gpu配置与设置
+# GPU configuration
 def gpu_option(gpu_name, gpu_num):
     os.environ['CUDA_VISIBLE_DEVICES'] = gpu_name
     config = tf.ConfigProto(device_count={'GPU': gpu_num})
@@ -39,6 +39,7 @@ class KerasBERT:
         gpu_option(gpu_name, gpu_num)
         self.batch_size = batch_size
         print("##### load KerasBERT start #####")
+        # Path
         model_path = 'models/BERT/pretrained_model/uncased_L-24_H-1024_A-16'
         config_path = os.path.join(model_path, 'bert_config.json')
         checkpoint_path = os.path.join(model_path, 'bert_model.ckpt')

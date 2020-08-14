@@ -8,7 +8,7 @@ import os
 import copy
 
 
-# gpu配置与设置
+# GPU config
 def gpu_option(gpu_name, gpu_num):
     os.environ['CUDA_VISIBLE_DEVICES'] = gpu_name
     config = tf.ConfigProto(device_count={'GPU': gpu_num}, allow_soft_placement=True)
@@ -33,7 +33,7 @@ class FineTuneXlnet:
     def __init__(self, gpu_name, gpu_num, seq_max_len, batch_size):
         print('--' * 10 + ' Load xlnet model start ' + '--' * 10)
         gpu_option(gpu_name, gpu_num)
-        self.seq_max_len = seq_max_len  # 与训练时相同
+        self.seq_max_len = seq_max_len  # same to train
         self.batch_size = batch_size
         spiece_model = 'models/Xlnet/xlnet_model/spiece.model'
         self.tokenizer = Tokenizer(spiece_model)
@@ -45,7 +45,6 @@ class FineTuneXlnet:
             self.par_model = model
         print('--' * 10 + ' Load xlnet model end ' + '--' * 10)
 
-    # 数据的生成器
     def data_generator(self, data):
         steps = len(data) // self.batch_size
         if len(data) % self.batch_size != 0:

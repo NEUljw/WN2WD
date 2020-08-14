@@ -25,7 +25,7 @@ DICTIONARY_PATH = 'word2id.pkl'
 ################
 # Parameters
 ################
-validation_ratio = 0.1       # 训练集中验证集占的比例
+validation_ratio = 0.1
 n_hidden = 50
 gradient_clip_norm = 1.25
 batch_size = 64  # 64
@@ -113,7 +113,7 @@ assert X_train['left'].shape == X_train['right'].shape
 assert len(X_train['left']) == len(Y_train)
 
 ################
-# 定义model
+# model
 ################
 
 def exponent_neg_manhattan_distance(left, right):
@@ -152,8 +152,8 @@ callbacks_list = [
 ################
 # Train model and save
 ################
-# malstm_trained = malstm.fit([X_train['left'], X_train['right']], Y_train, batch_size=batch_size, epochs=n_epoch,
-#                             validation_data=([X_validation['left'], X_validation['right']], Y_validation),
-#                             callbacks=callbacks_list, verbose=2)
-# with open(DICTIONARY_PATH, 'wb') as f:
-#     pickle.dump({'word2id': vocabulary, 'max_seq_length': max_seq_length}, f)
+malstm_trained = malstm.fit([X_train['left'], X_train['right']], Y_train, batch_size=batch_size, epochs=n_epoch,
+                            validation_data=([X_validation['left'], X_validation['right']], Y_validation),
+                            callbacks=callbacks_list, verbose=2)
+with open(DICTIONARY_PATH, 'wb') as f:
+    pickle.dump({'word2id': vocabulary, 'max_seq_length': max_seq_length}, f)

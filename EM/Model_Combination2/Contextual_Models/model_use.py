@@ -5,13 +5,13 @@ from datetime import datetime
 
 def cal_sim(wn_des_list, wiki_des_list, model_path, batch_size):
     start = datetime.now()
-    print('模型运行开始时间:', start.strftime("%Y-%m-%d %H:%M:%S"), '\n==================')
-    print('模型路径:', model_path)
-    print('synset数量:', len(wn_des_list))
+    print('start time:', start.strftime("%Y-%m-%d %H:%M:%S"), '\n==================')
+    print('model path:', model_path)
+    print('synset number:', len(wn_des_list))
     embedder = SentenceTransformer(model_path)
     wiki_len = [len(i) for i in wiki_des_list]
     wiki_des_list = sum(wiki_des_list, [])
-    # 防止运行报错对None的处理
+    # handling 'None' to prevent error
     wiki_des_list = [i if i != 'None' else 'None Description' for i in wiki_des_list]
 
     wiki_embeddings = embedder.encode(wiki_des_list, batch_size=batch_size)
@@ -36,6 +36,6 @@ def cal_sim(wn_des_list, wiki_des_list, model_path, batch_size):
         all_sim_lst.append(sim_lst)
 
     end = datetime.now()
-    print('==================\n模型运行结束时间:', end.strftime("%Y-%m-%d %H:%M:%S"))
-    print('运行时间为', round((end-start).seconds/60, 4), 'minutes')
+    print('==================\nend time:', end.strftime("%Y-%m-%d %H:%M:%S"))
+    print('running time is', round((end-start).seconds/60, 4), 'minutes')
     return all_sim_lst

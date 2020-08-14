@@ -1,9 +1,3 @@
-"""
-This example runs a BiLSTM after the word embedding lookup. The output of the BiLSTM is than pooled,
-for example with max-pooling (which gives a system like InferSent) or with mean-pooling.
-
-Note, you can also pass BERT embeddings to the BiLSTM.
-"""
 import torch
 from torch.utils.data import DataLoader
 import math
@@ -14,7 +8,7 @@ from sentence_transformers.readers import *
 import logging
 from datetime import datetime
 
-# 参数
+# parameters
 batch_size = 128
 num_epochs = 10
 sts_reader = STSBenchmarkDataReader('../datasets/stsbenchmark')

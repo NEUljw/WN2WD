@@ -68,5 +68,5 @@ def cal_sim_LDA(all_wordnet_desc, all_wikidata_desc_list, default_sim):
 
 
 if __name__ == '__main__':
-    # 训练模型
+    # train model
     train_model(num_topic=10)

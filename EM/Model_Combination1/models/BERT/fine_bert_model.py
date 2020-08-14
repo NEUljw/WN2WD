@@ -7,7 +7,7 @@ import numpy as np
 import os
 
 
-# gpu配置与设置
+# GPU config
 def gpu_option(gpu_name, gpu_num):
     os.environ['CUDA_VISIBLE_DEVICES'] = gpu_name
     config = tf.ConfigProto(device_count={'GPU': gpu_num})
@@ -20,11 +20,11 @@ class FineTuneBert:
     def __init__(self, gpu_name, gpu_num, seq_max_len, batch_size):
         print('--'*10+' Load BERT model start '+'--'*10)
         gpu_option(gpu_name, gpu_num)
-        self.seq_max_len = seq_max_len  # 与训练时相同
+        self.seq_max_len = seq_max_len   # same to train
         self.batch_size = batch_size
         model_path = 'models/BERT/pretrained_model/uncased_L-24_H-1024_A-16'
         vocab_path = os.path.join(model_path, 'vocab.txt')
-        # 加载Tokenizer
+        # load Tokenizer
         token_dict = load_vocabulary(vocab_path)
         self.tokenizer = Tokenizer(token_dict)
         MODEL_SAVE_PATH = 'models/BERT/fine_tune_model/bert_fine_tune.hdf5'
@@ -35,7 +35,6 @@ class FineTuneBert:
             self.par_model = model
         print('--' * 10 + ' Load BERT model end ' + '--' * 10)
 
-    # 数据的生成器
     def data_generator(self, data):
         steps = len(data) // self.batch_size
         if len(data) % self.batch_size != 0:

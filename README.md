@@ -4,7 +4,7 @@
 
 ## Introduction
 
-We propose an **Ensemble Method (EM)** and a **Comprehensive Similarity Method (CSM)** to map WordNet to Wikidata. Among them, CSM has the highest correct rate, the final mapping results is `mapping results.pkl`.
+We propose an **Ensemble Model (EM)** and a **Comprehensive Similarity Model (CSM)** to map WordNet to Wikidata. Among them, CSM has the highest correct rate, the final mapping results is `mapping results.pkl`.
 
 
 
@@ -18,13 +18,13 @@ The code does **not** work with Python 2.7.
 
 ## Data preprocess
 
-First of all, we need to preprocess the data.
+First of all, you need to preprocess the data.
 
 1. **Download the relevant data and put it in the corresponding path.**
-2. Set the path parameters in `create_data.py` and run it to preprocess the original data.
-3. Set the path parameters in `create_run_data.py` and run to generate the running data.
+2. Set the path parameters in `dataset/create_data.py` and run it to preprocess the original data.
+3. Set the path parameters in `dataset/create_run_data.py` and run to generate the running data.
 
-Then, we can run any of the three methods:
+Then, you can run any of the three methods:
 
 + EM (model combination1)
 + EM (model combination2)
@@ -32,7 +32,7 @@ Then, we can run any of the three methods:
 
 
 
-## Ensemble Method (EM)
+## Ensemble Model (EM)
 
 For the model selection, we use two combinations.
 
@@ -40,7 +40,9 @@ For the model selection, we use two combinations.
 
 There are six models in this model combination, including three Non-Contextual models: LDA, Word2Vec, FastText, and three Contextual models: MaLSTM, BERT, XLNet.
 
-Run multiple iterations, the steps for one iteration are as follows:
+First, you need to download BERT and XLNet, then put it on the corresponding path.
+
+Next, run multiple iterations, the steps for one iteration are as follows:
 
 1. Set the path parameters in `models/LDA/LDA_model.py`, run the corresponding part, generate the train data of None-Contextual models and train LDA model.
 2. Set the path parameters in `models/word2vec/word2vec_model.py` and run it to train Word2Vec model.
@@ -79,7 +81,7 @@ Finally, all intermediate results are processed to generate mapping results.
 
 
 
-## Comprehensive Similarity Method (CSM) 
+## Comprehensive Similarity Model (CSM) 
 
 We combine the **description similarity** and the **label similarity** as the comprehensive similarity.
 
