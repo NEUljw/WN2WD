@@ -1,4 +1,4 @@
-"""从每一轮的结果中提取出positive训练数据，合并neg、pos数据"""
+"""generate positive train data，merge neg data and pos data"""
 import csv
 from random import shuffle
 
@@ -12,11 +12,11 @@ print(pos_votes)
 data = []
 with open(RESULT_FILE_PATH, 'r', encoding='utf-8-sig') as f:
     f_csv = csv.reader(f)
-    head_row = next(f_csv)     # 跳过表头
+    head_row = next(f_csv)
     for row in f_csv:
         if row[6] in pos_votes and row[1] != 'None' and row[4] != 'None':
             data.append([row[1], row[4], '1'])
-# print(len(data))
+
 data_new = []
 for i in data:
     if i not in data_new:
@@ -26,16 +26,16 @@ print('pos num:', len(data_new))
 data_neg = []
 with open(NEG_FILE_PATH, 'r', encoding='utf-8-sig') as f:
     f_csv = csv.reader(f)
-    head_row = next(f_csv)     # 跳过表头
+    head_row = next(f_csv)
     for row in f_csv:
         if row[0] != 'None' and row[1] != 'None':
             data_neg.append([row[0], row[1], row[2]])
-# print(len(data_neg))
+
 data_new2 = []
 for i in data_neg:
     if i not in data_new2:
         data_new2.append(i)
-data_new2 = data_new2[:len(data_new)]       # 保证pos数据和neg数据数量相等
+data_new2 = data_new2[:len(data_new)]       # ensure the number of pos data and neg data is equal
 print('neg num:', len(data_new2))
 
 data = data_new + data_new2

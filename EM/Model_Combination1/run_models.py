@@ -12,7 +12,7 @@ from models.MaLSTM.model_predict import data_to_csv, cal_sim_lstm
 
 def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
                     for_count_votes=False, gpu_name=None, gpu_num=None, batch_size=None):
-    with open('data/run_data.pkl', 'rb') as f:
+    with open('data/run_data.pkl', 'rb') as f:        # Path
         data = pickle.load(f)
         query_result = data['data']
     query_result = query_result[start_num-1:end_num-1]
@@ -23,7 +23,6 @@ def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
         return query_result
 
     all_synset_des, all_wiki_candidate, all_synset_id = [], [], []
-    # all_synset_des、all_synset_id都是list，all_wiki_candidate是list的list
     for i, value in enumerate(query_result):
         synset_des = value[0][1]
         synset_id = value[0][0]
@@ -33,7 +32,7 @@ def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
         all_wiki_candidate.append(wiki_candidate)
     print('create data end!')
 
-    # 所有model计算相似度的结果
+    # calculate mid results
     print('wordnet synsets number:', len(all_synset_des))
     if 'LDA' in run_models:
         print('LDA model running..')
@@ -67,7 +66,7 @@ def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
 
     if 'LSTM' in run_models:
         print('LSTM model running..')
-        print('正在转换成适合LSTM处理的格式...')
+        print('format conversion...')
         data_to_csv(all_synset_des, all_wiki_candidate)
         wiki_len = [len(q) for q in all_wiki_candidate]
         LSTM_sim = cal_sim_lstm(wiki_len=wiki_len, gpu_name=gpu_name, gpu_num=gpu_num)
@@ -79,7 +78,7 @@ def query_candidate(des_none_sim=-100, run_models=None, start_num=0, end_num=0,
 
 def run(syn_start, syn_end, run_models, gpu_name=None, gpu_num=None, batch_size=24):
 
-    print('运行的模型：', run_models)
+    print('running models：', run_models)
     print('--'*20+' start '+'--'*20)
     start = time.clock()
 
@@ -100,20 +99,19 @@ def run(syn_start, syn_end, run_models, gpu_name=None, gpu_num=None, batch_size=
 
 if __name__ == "__main__":
     '''
-    1. 模型包括: 'LDA'、'word2vec'、'xlnet'、'bert'、'FastText'、'LSTM'
-    2. gpu_num>=2时调用多GPU模式，否则正常模式
-    3. bert和xlnet最好不要在同一个run里 ！！
-    4. 如果想分好几部分运行，则序号应该是 1-10, 10-20 的格式
+    1. Models include: 'LDA'、'word2vec'、'xlnet'、'bert'、'FastText'、'LSTM'
+    2. Support multi GPUs
+    3. BERT and XLNet shouldn't be in the same thread
     '''
-    gpu_name = "0"      # gpu编号设置
-    gpu_num = 1       # gpu数量设置
-    step = 2          # 运行步骤
+    gpu_name = "0"      # GPU id
+    gpu_num = 1       # GPU number
+    step = 2          # running step
     if step == 1:
         t1 = threading.Thread(target=run, args=(1, 117660, ['LDA', 'word2vec'],))
         t2 = threading.Thread(target=run, args=(1, 117660, ['FastText'],))
         t1.start()
         t2.start()
     if step == 2:
-        run(1, 117660, run_models=['LSTM'], gpu_name=gpu_name, gpu_num=gpu_num)
-        # run(1, 117660, run_models=['xlnet'], gpu_name=gpu_name, gpu_num=gpu_num, batch_size=12)
-        # run(1, 117660, run_models=['bert'], gpu_name=gpu_name, gpu_num=gpu_num, batch_size=12)
+        run(1, 117660, run_models=['LSTM'], gpu_name=gpu_name, gpu_num=gpu_num)     # except first round
+        run(1, 117660, run_models=['xlnet'], gpu_name=gpu_name, gpu_num=gpu_num, batch_size=12)
+        run(1, 117660, run_models=['bert'], gpu_name=gpu_name, gpu_num=gpu_num, batch_size=12)
