@@ -20,7 +20,7 @@ The code does **not** work with Python 2.7.
 
 First of all, you need to preprocess the data.
 
-1. **Download the relevant data and put it in the corresponding path.**
+1. **Download the relevant data and put it in the corresponding path. The files aren't uploaded because they are too large (about 2.4G).**
 2. Set the path parameters in `dataset/create_data.py` and run it to preprocess the original data.
 3. Set the path parameters in `dataset/create_run_data.py` and run to generate the running data.
 
